@@ -1,0 +1,9 @@
+# private: personal setup, other people's material, generated output
+profile.md
+cases/*
+!cases/README.md
+.claude/
+run-eval.mjs
+report.html
+prompts/v4.md
+prompts/v5.md
