@@ -1,5 +1,27 @@
 # post-reviewer
 
+## Start here: paste this to your agent
+
+Works in Claude Code, Codex, Cursor, or any agent that can run shell commands and read files.
+
+```text
+Set up post-reviewer (https://github.com/abhibansal60/post-reviewer) for me.
+
+1. Clone it and read README.md and prompts/v2.md.
+2. Build my setup profile: copy profile.example.md to profile.md and fill it with facts only, no opinions.
+   Gather what you can with read-only commands (OS, CPU/RAM/GPU, installed tools, how many repos I have and how
+   big, which API key variables are set: names only, never print a value). Ask me about the rest (how I pay for
+   AI, what I avoid). Show me the file and wait for my OK.
+3. Install it. In Claude Code, link skill/post-reviewer into ~/.claude/skills. In any other agent, save the
+   instructions in prompts/v2.md as a reusable prompt or skill the way that tool supports.
+4. Test it: ask me for one post, link or tool I've been unsure about. Put the post text, screenshots and the
+   README into a case folder, then review it by following prompts/v2.md exactly, with no web access. Give me the
+   verdict (adopt / trial / skip), each claim marked supported / unsupported / contradicted / unverifiable, and
+   why it does or doesn't fit my setup.
+
+Don't install anything or change my config without asking first.
+```
+
 Paste in a tweet, README or prompt about some tool, and get a signal-vs-noise verdict for *your* setup:
 `adopt`, `trial` or `skip`, with each claim marked supported / unsupported / contradicted / unverifiable
 against the files you gave it, and reasons tied to a profile of your own setup.
