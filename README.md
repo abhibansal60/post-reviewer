@@ -15,6 +15,16 @@ and none of your settings, hooks or memory (`--setting-sources ""`), plus the ev
 
 Needs Claude Code. Runs on Sonnet 5.5 at medium effort, about $0.03 at list price per review.
 
+## As a Claude Code skill
+
+`skill/post-reviewer/SKILL.md` wraps this as a skill that gathers the post and READMEs into a case folder and runs
+the review in a subagent, so the long files stay out of your conversation:
+
+    ln -s "$PWD/skill/post-reviewer" ~/.claude/skills/post-reviewer
+
+Then ask "is this worth it?" with a post, link or screenshot. The eval below tested `claude -p` in isolation; the
+subagent also sees your normal context, so results can differ slightly (`./review.sh` is the exact tested path).
+
 ## How the prompt was tuned
 
 13 real cases: 6 posts that should be skipped and 7 tools their owner had adopted. Sonnet 5.5 reviews each
@@ -35,6 +45,7 @@ With 13 cases, differences under about 0.1 are noise.
 
 ## Files
 
+- `skill/post-reviewer/SKILL.md`: the Claude Code skill.
 - `prompts/v0-v3.md`: each version of the system prompt.
 - `judge.md`: the grader's instructions.
 - `eval-fill.mjs`: the app-specific part of the eval runner. Paste it over the "fill these in" block of the runner
