@@ -7,7 +7,7 @@ description: Review a tool, skill, plugin, repo, prompt or social post the user 
 
 A second opinion on whether to adopt something, judged against the user's own setup profile. It runs as a subagent so the long README and screenshots stay out of the main conversation.
 
-The reviewer prompt and the setup profile live in the post-reviewer repo, `${POST_REVIEWER_DIR:-~/code/post-reviewer}` (call it `$PR`): `$PR/prompts/v2.md` and `$PR/profile.md`. Read them by path; don't copy their text into this skill.
+The reviewer prompt and the setup profile live in the post-reviewer repo (call it `$PR`): `$PR/prompts/v2.md` and `$PR/profile.md`. `$PR` is the first of these that contains `prompts/v2.md`: `$POST_REVIEWER_DIR`, two levels above this skill's real path (`realpath <skill dir>/../..`, which works when the skill is a symlink into a clone), then `~/code/post-reviewer`. If none does, ask the user where they cloned it. Read them by path; don't copy their text into this skill.
 
 ## Steps
 
