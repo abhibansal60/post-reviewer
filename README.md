@@ -32,6 +32,9 @@ and none of your settings, hooks or memory (`--setting-sources ""`), plus the ev
 ## Use
 
     cp profile.example.md profile.md      # fill in your own setup
+
+`profile.md` can be a symlink, for example to a private file synced between your machines, so every machine reviews against the same setup.
+
     mkdir case && cp post.md README.md screenshot.png case/
     ./review.sh case
 
