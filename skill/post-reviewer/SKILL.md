@@ -15,17 +15,30 @@ The reviewer prompt and the setup profile live in the post-reviewer repo (call i
 
 2. **Build a case folder** at `<scratchpad or /tmp>/post-reviewer/<short-slug>/` with everything the user is reacting to:
    - The post or question as `post.md` (verbatim; note who wrote it if known).
+   - Several related posts about one topic go in one case folder, one file per post (`post-<author>.md`). The review then compares them: which claims agree, which conflict, and one verdict per distinct method or tool.
    - Screenshots and images: copy the saved files in as they are.
    - For a GitHub repo or skill: its README (`gh api repos/OWNER/REPO/readme -H "Accept: application/vnd.github.raw" > README.md`) and, for a skill, its `SKILL.md`. Add the license and star/push dates only if the repo page gives them (`gh repo view`).
+   - For an X (Twitter) post: x.com needs JavaScript, so use the fxtwitter API (no key needed). Save the author, date and text into `post.md`.
+     - Post: `curl -s https://api.fxtwitter.com/<user>/status/<id>`, then use `.tweet.text` and `.tweet.author`. A quoted post is under `.tweet.quote`.
+     - Linked X article: `.tweet.article.title`, and the text of each block in `.tweet.article.content.blocks[]`. The article doesn't need a login this way.
+     - The author's thread: `curl -s https://api.fxtwitter.com/2/thread/<id>`, then `.thread[].text`. Always fetch this. Posts that say "prompt below" or "thread 🧵" put the actual content in the replies.
+     - Images: download each `.tweet.media.photos[].url`.
+     - Video: download a 720p `.mp4` from `.tweet.media.videos[].variants`. Save frames spread over its length (`ffmpeg -ss <t> -i vid.mp4 -frames:v 1 frame_<t>.jpg`), then delete the video.
+   - For a post that lists several tools, fetch each one's README into its own file (`<owner>_<repo>.README.md`).
    - For other links: fetch the page and save the text.
+   - **Already installed?** Check whether the user already has this tool, or one doing the same job: `claude plugin list`, `ls ~/.claude/skills`, and any skill or plugin list the user keeps. Write what you find, as facts, to `installed.md`. The profile can lag behind the real setup, and a review that treats an installed tool as new is wrong.
    Never fill anything in from memory. If a page or README can't be read, say so, and pass on what you have; the reviewer will mark those claims unverifiable.
 
 3. **Spawn one subagent** (Agent tool, `subagent_type: general-purpose`, `model: sonnet`) with this prompt, filling in the paths:
    > Follow the reviewer instructions in `<PR>/prompts/v2.md` exactly. The user's setup is in `<PR>/profile.md`. The case directory is `<case dir>`. Read the profile and every file in the case directory, including images. Don't use the web or run anything. Return the review in the format the instructions ask for.
 
-4. **Show the result** verdict first, then the claims table, fit, what's worth keeping, and the summary, in plain language. Don't change the reviewer's verdict. Add one line: it's a second opinion, and `skip` doesn't stop the user from trying something small if they still want to.
+4. **Show the result** verdict first (one verdict per tool when the case has several), then the claims table, fit, what's worth keeping, and the summary, in plain language. Don't change the reviewer's verdict. Add one line: it's a second opinion, and `skip` doesn't stop the user from trying something small if they still want to.
 
-5. **If the user disagrees**, ask why in one line and offer to save the case (`cases/<id>/` plus an `expected.jsonl` line) so the reviewer can be re-tuned later. Don't save it without asking.
+5. **If the user wants to act on it:**
+   - `adopt`: install it the way the user normally adds skills or plugins.
+   - `trial`: run a throwaway test that changes no config. For example, test an MCP server with `claude -p "<task>" --strict-mcp-config --mcp-config /tmp/<dir>/mcp.json`, and compare the same task without the server. Put the prompt before `--allowedTools`, which takes several values and would swallow it. Delete the test files afterwards.
+
+6. **If the user disagrees, or a trial contradicts the verdict**, ask why in one line and offer to save the case (`cases/<id>/` plus an `expected.jsonl` line) so the reviewer can be re-tuned later. Don't save it without asking.
 
 ## Notes
 
